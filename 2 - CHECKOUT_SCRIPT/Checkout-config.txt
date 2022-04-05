@@ -1,0 +1,100 @@
+<!-- ##### verify if order has been set ##### -->
+{% if checkout.order %}
+
+	<!-- ##### Start Config IFTHENPAY ##### -->
+	
+	<!-- ##### SET paymentMethod ##### -->
+	{% assign paymentMethod = '' %}
+	{% for transaction in transactions %}
+		{% assign gateway = transaction.gateway | upcase %}
+			{% if gateway contains "MB WAY" or gateway contains "MULTIBANCO" or gateway contains "PAYSHOP" or gateway contains "CARTÃO DE CRÉDITO"%}
+					{% assign paymentMethod = gateway %}
+					{% assign titleGateway = transaction.gateway %}
+					{% assign paymentAmount  = transaction.amount  %} 
+		{% endif %}
+	{% endfor %}
+
+
+	<!-- ##### Config Multibanco ##### -->
+	{% if paymentMethod == "MULTIBANCO" %}
+	<br/><br/>
+	<table style="border: 1px solid #2196F3; color: white; padding: 0px; border-collapse: collapse; width: 320px; height: 150px; background-color:#fff;">
+		<tr>
+			<td colspan="2" style="border-bottom: 1px solid #2196F3; padding: 10px 0px; font-size: small; text-align:center; background: #2196F3; ">Pagamento por Multibanco ou Homebanking</td></tr><tr><td style="padding: 25px 0px;">
+				<img src="https://ifthenpay.com/mb.png" style="margin-left: 10px;"/>
+			</td>
+			<td>
+				<img src="https://ifthenpay.com/shopify/generateRef.ashx?entidade=[ENTIDADE]&subentidade=[SUBENTIDADE]&order_id={{order_number}}&order_total={{paymentAmount | money_without_currency}}&id={{order_id}}" style="margin-right: 10px;" />
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<br/>
+	{% endif %}
+	<!-- ##### End Config Multibanco ##### -->
+
+
+	<!-- ##### Config MB WAY ##### -->
+	{% if paymentMethod == "MB WAY" %}
+	<br/><br/>
+	<table style="border: 1px solid #D60510; font-family:Arial; padding: 0px; border-collapse: collapse; width: 320px; height: 150px; background-color:#fff;">
+			<tr>
+				<td colspan="2" style="border-bottom: 1px solid #D60510; padding: 10px 0px; font-size: small; text-align:center; background: #D60510; color:white;">Pagamento MBWAY</td>
+			</tr>
+			<tr>
+				<td style="padding: 25px 0px;">
+					<img src="https://ifthenpay.com/img/mbway.png" style="margin-left: 5px;" />
+				</td>
+				<td>
+					<img src="https://ifthenpay.com/shopify/MBWAYPayment.ashx?mbwaykey=[MBWAY_KEY]&telemovel={{billing_address.phone}}&email={{order.custom.email}}&order_id={{order_number}}&order_total={{paymentAmount  | money_without_currency}}&id={{order_id}}" style="margin-right: 5px;" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="font-size: x-small; padding:5px 2px; border: 0px; text-align:center;">Por favor verifique a notificação na sua App MBWAY e proceda ao pagamento da sua encomenda.</td>
+			</tr>
+		</table>
+	<br/><br/>
+	{% endif %}
+	<!-- ##### End Config MBWAY ##### -->
+	
+	
+	<!-- ##### Config PAYSHOP ##### -->
+	{% if paymentMethod == "PAYSHOP" %}
+	<br/>
+	<p><img src="https://ifthenpay.com/shopify/payshop.ashx?payshopkey=[PAYSHOP_KEY]&order_id={{order_number}}&valor={{paymentAmount | money_without_currency}}&validade=5&id={{order_id}}" /></p>
+	<br/>
+	{% endif %}
+	<!-- ##### End Config PAYSHOP ##### -->
+	
+	
+	<!-- ##### Config CCARD ##### -->
+	{% if paymentMethod == "CARTÃO DE CRÉDITO" %}
+	<script type="text/javascript" src="https://gateway.ifthenpay.com/plugins/shopify/js/ifthenpayShopify.js"></script>
+	<script>
+		let gatewayKey="[GATEWAY_KEY]";
+		let parameters = "token="+ gatewayKey + "&id={{order_number}}&amount={{paymentAmount | money_without_currency}}&uid={{order_id}}&cms=SHOPIFY";
+		Shopify.Checkout.OrderStatus.addContentBox('<h2>{{titleGateway}}</h2>',
+		'<p>Para concluir a sua compra clique no botão "Pagar".</p>'+
+		'<br><p>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>'+'<button type="button" id="openGateway" class="btn" onclick="OpenShopifyGateway(\''+parameters+'\')">Pagar</button>');
+	</script>
+	{% endif %}
+	<!-- ##### End Config CCARD ##### -->
+	
+
+	<!-- ##### End Config IFTHENPAY ##### -->
+
+{% else %}
+	
+	<!-- ##### if order not set reload page ##### -->
+	<script>
+		window.onload = function() {
+		if(!window.location.href.includes("details")){
+			 setTimeout(() => {  
+				  var url  = window.location.href + "?details";
+				  window.location.href =url;
+			  }, 2000);
+		};
+	}
+	</script>
+	
+{% endif %}

@@ -1,0 +1,18 @@
+<!-- ##### begin Payshop email template config ##### -->
+{% assign paymentGateway = order.gateway | upcase %}
+{% if paymentGateway contains "PAYSHOP" %}
+{% for transaction in transactions %}
+	{% assign gw_ifthenpay = transaction.gateway | upcase %}
+	{% if gw_ifthenpay == "PAYSHOP" %}
+		{% assign amount_topay = transaction.amount  %} 
+	{% endif %}
+{% endfor %}
+<div>
+<h3>Dados de pagamento</h3>
+<p>
+<img src="https://ifthenpay.com/shopify/payshop.ashx?payshopkey=[PAYSHOP_KEY]&order_id={{order_number}}&valor={{amount_topay | money_without_currency}}&validade=5&id={{id}}"/>
+</p>
+<br/>
+</div>
+{% endif %}
+<!-- ##### end payshop email template config ##### -->

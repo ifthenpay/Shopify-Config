@@ -1,0 +1,21 @@
+<!-- ##### begin CCARD email config ##### -->
+{% assign paymentGateway = order.gateway | upcase %}
+
+{% if paymentGateway contains "CARTÃO DE CRÉDITO" and (order.financial_status == 'pending'  or order.financial_status == 'partially_paid') %}
+
+	{% for transaction in transactions %}
+		{% assign gw_ifthenpay = transaction.gateway | upcase %}
+		{% if gw_ifthenpay == "CARTÃO DE CRÉDITO" %}
+			{% assign amount_topay = transaction.amount  %} 
+		{% endif %}
+	{% endfor %}
+	<div>
+	<h3>Pagamento da Encomenda</h3>
+	<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
+	<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
+	<p>
+		<a href='https://gateway.ifthenpay.com/?token=[GATEWAY_KEY]&id={{order_number}}&amount={{amount_topay | money_without_currency}}&lang=PT&uid={{id}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Concluir Pagamento</a>
+	</p>
+	</div>
+{% endif %}
+<!-- ##### end CCARD email config ##### -->
