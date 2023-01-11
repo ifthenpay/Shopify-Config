@@ -1,0 +1,113 @@
+ <!-- ##### begin ifthenpay config ##### -->
+ <table class="row content">
+	<tr>
+		<td class="content__cell">
+			<center>
+				<table class="container">
+				  <tr>
+					<td>
+									<center>
+							<!-- ##### begin Multibanco email template config ##### -->
+							{% assign paymentGateway = order.gateway | upcase %}
+							{% if paymentGateway contains "MULTIBANCO" %}
+							{% for transaction in transactions %}
+								{% assign gw_ifthenpay = transaction.gateway | upcase %}
+								{% if gw_ifthenpay contains "MULTIBANCO" %}
+									{% assign amount_topay = transaction.amount  %} 
+								{% endif %}
+							{% endfor %}
+							<div>
+							<h3>Dados de pagamento</h3>
+							<table style="border: 1px solid #2196F3; color: white; padding: 0px; border-collapse: collapse; width: 320px; height: 150px"><tr><td colspan="2" style="border-bottom: 1px solid #2196F3; padding: 10px 0px; font-size: small; text-align:center; background: #2196F3; ">Pagamento por Multibanco ou Homebanking</td></tr><tr><td style="padding: 25px 0px;"><img src="https://ifthenpay.com/mb.png" style="margin-left: 10px;"/></td>
+							<td>
+							<img src="https://ifthenpay.com/shopify/generateRef.ashx?entidade=[ENTIDADE]&subentidade=[SUBENTIDADE]&order_id={{order_number}}&order_total={{amount_topay | money_without_currency}}&id={{id}}" style="margin-right: 10px;" />
+							</td>
+							</tr>
+							</table>
+							<br/><br/>
+							</div>
+							{% endif %}
+							<!-- ##### end Multibanco email template config ##### -->
+							
+							</center>
+							
+							<!-- ##### begin MBWAY email config ##### -->
+							{% assign paymentGateway = order.gateway | upcase %}
+
+							{% if paymentGateway contains "MB WAY" and (order.financial_status == 'pending'  or order.financial_status == 'partially_paid') %}
+
+								{% for transaction in transactions %}
+									{% assign gw_ifthenpay = transaction.gateway | upcase %}
+									{% if gw_ifthenpay contains "MB WAY" %}
+										{% assign amount_topay = transaction.amount  %} 
+									{% endif %}
+								{% endfor %}
+								<div>
+								<h3>Pagamento da Encomenda</h3>
+								<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso não tenha recebido a notificação no seu telemóvel ou não tenha efetuado o pagamento da sua encomenda, clique no botão "Pagar por MB WAY".<br><br></p>
+								<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
+								<p>
+								<center>
+								<a href='https://gateway.ifthenpay.com/plugins/shopify/mbway.php?mbwaykey=[MBWAY_KEY]&telemovel={{shipping_address.phone}}&email={{order.email}}&order_id={{order_number}}&order_total={{amount_topay | money_without_currency}}&id={{id}}&shop_url={{shop.url}}&shop_name={{shop.name}}&shop_logo={{shop.email_logo_url}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Pagar por MB WAY</a>
+								</center>
+								</p>
+								</div>
+								
+							{% endif %}
+
+							<!-- ##### end MBWAY email config ##### -->
+							
+							<!-- ##### begin Payshop email template config ##### -->
+							{% assign paymentGateway = order.gateway | upcase %}
+							{% if paymentGateway contains "PAYSHOP" %}
+							{% for transaction in transactions %}
+								{% assign gw_ifthenpay = transaction.gateway | upcase %}
+								{% if gw_ifthenpay contains "PAYSHOP" %}
+									{% assign amount_topay = transaction.amount  %} 
+								{% endif %}
+							{% endfor %}
+							<div>
+							<h3>Dados de pagamento</h3>
+							<p>
+							<center>
+							<img src="https://ifthenpay.com/shopify/payshop.ashx?payshopkey=[PAYSHOP_KEY]&order_id={{order_number}}&valor={{amount_topay | money_without_currency}}&validade=5&id={{id}}"/>
+							</center>
+							</p>
+							<br/>
+							</div>
+							{% endif %}
+							<!-- ##### end payshop email template config ##### -->
+							
+							<!-- ##### begin CCARD email config ##### -->
+						{% assign paymentGateway = order.gateway | upcase %}
+
+						{% if paymentGateway contains "CARTÃO DE CRÉDITO" and (order.financial_status == 'pending'  or order.financial_status == 'partially_paid') %}
+
+							{% for transaction in transactions %}
+								{% assign gw_ifthenpay = transaction.gateway | upcase %}
+								{% if gw_ifthenpay == "CARTÃO DE CRÉDITO" %}
+									{% assign amount_topay = transaction.amount  %} 
+								{% endif %}
+							{% endfor %}
+							<div>
+							<h3>Pagamento da Encomenda</h3>
+							<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
+							<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
+							<p>
+							<center>
+								<a href='https://gateway.ifthenpay.com/?token=[GATEWAY_KEY]&id={{order_number}}&amount={{amount_topay | money_without_currency}}&lang=PT&uid={{id}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Concluir Pagamento</a>
+							</center>
+							</p>
+							</div>
+						{% endif %}
+						<!-- ##### end CCARD email config ##### -->
+							
+						
+					</td>
+					</tr>
+				</table>
+			</center>
+		</td>
+	</tr>
+</table>
+<!-- ##### end ifthenpay config ##### -->
