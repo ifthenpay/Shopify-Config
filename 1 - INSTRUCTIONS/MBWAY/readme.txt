@@ -18,7 +18,7 @@ Nota: Se optar por este método de pagamento deverá estar registado com o seu n
 - No separador Form options na opção (Shipping address phone number) escolher uma das seguintes opções (Optional ou Required). 
 Nota: Se escolher Hidden o cliente não terá possibilidade de introduzir o número de telemóvel que será usado no envio do pedido de pagamento MB WAY.
 
-- No separador Order processing, no campo Additional scripts, copiar o conteúdo do ficheiro "checkout-MBWAY-config.txt" para dentro da caixa. Caso já tenha pagamentos MULTIBANCO ativo, terá que acrescentar no final do código existente.
+- No separador Order processing, no campo Additional scripts, copiar o conteúdo do ficheiro "Checkout-config.txt" para dentro da caixa. Caso já tenha outros pagamentos ativos, terá que acrescentar no final do código existente.
 
 No código existente deverá substituir a tag [MBWAYKEY] pela sua MBWAY KEY (sem os parênteses rectos) fornecida pela ifthenpay no formato AAA-000000. Poderá encontrá-la no seu contrato. Não confundir com a chave de acesso ao backoffice.
 
