@@ -85,7 +85,7 @@
 
 							{% for transaction in transactions %}
 								{% assign gw_ifthenpay = transaction.gateway | upcase %}
-								{% if gw_ifthenpay == "CARTÃO DE CRÉDITO" %}
+								{% if gw_ifthenpay contains "CARTÃO DE CRÉDITO" %}
 									{% assign amount_topay = transaction.amount  %} 
 								{% endif %}
 							{% endfor %}
