@@ -16,7 +16,7 @@
 
 
 	<!-- ##### Config Multibanco ##### -->
-	{% if paymentMethod == "MULTIBANCO" %}
+	{% if paymentMethod contains "MULTIBANCO" %}
 	<br/><br/>
 	<table style="border: 1px solid #2196F3; color: white; padding: 0px; border-collapse: collapse; width: 320px; height: 150px; background-color:#fff;">
 		<tr>
@@ -35,7 +35,7 @@
 
 
 	<!-- ##### Config MB WAY ##### -->
-	{% if paymentMethod == "MB WAY" %}
+	{% if paymentMethod contains "MB WAY" %}
 	<br/><br/>
 	<table style="border: 1px solid #D60510; font-family:Arial; padding: 0px; border-collapse: collapse; width: 320px; height: 150px; background-color:#fff;">
 			<tr>
@@ -59,7 +59,7 @@
 	
 	
 	<!-- ##### Config PAYSHOP ##### -->
-	{% if paymentMethod == "PAYSHOP" %}
+	{% if paymentMethod contains "PAYSHOP" %}
 	<br/>
 	<p><img src="https://ifthenpay.com/shopify/payshop.ashx?payshopkey=[PAYSHOP_KEY]&order_id={{order_number}}&valor={{paymentAmount | money_without_currency}}&validade=5&id={{order_id}}" /></p>
 	<br/>
@@ -68,7 +68,7 @@
 	
 	
 	<!-- ##### Config CCARD ##### -->
-	{% if paymentMethod == "CARTÃO DE CRÉDITO" %}
+	{% if paymentMethod contains "CARTÃO DE CRÉDITO" %}
 	<script type="text/javascript" src="https://gateway.ifthenpay.com/plugins/shopify/js/ifthenpayShopify.js"></script>
 	<script>
 		let gatewayKey="[GATEWAY_KEY]";
