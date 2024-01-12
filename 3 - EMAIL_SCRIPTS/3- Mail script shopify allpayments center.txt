@@ -101,7 +101,41 @@
 							</div>
 						{% endif %}
 						<!-- ##### end CCARD email config ##### -->
-							
+
+						<!-- ##### begin COFIDIS email config ##### -->
+{% assign paymentGateway = order.gateway | upcase %}
+{% if paymentGateway contains "COFIDIS" and (order.financial_status == 'pending'  or order.financial_status == 'partially_paid') %}
+
+	{% for transaction in transactions %}
+		{% assign gw_ifthenpay = transaction.gateway | upcase %}
+		{% if gw_ifthenpay contains "COFIDIS" %}
+			{% assign amount_topay = transaction.amount  %} 
+		{% endif %}
+	{% endfor %}
+	<div>
+	<h3>Pagamento da Encomenda</h3>
+
+	{% assign minLimitAmount = 6000 %} <!--Indicar limite minimo, com 2 casas decimais, sem separador decimal (exemplo 60 euros = 6000 ) -->
+	{% assign maxLimitAmount = 100000 %} <!--Indicar limite máximo, com 2 casas decimais, sem separador decimal (exemplo 1000 euros = 100000 ) -->			
+
+	{% if amount_topay >= minLimitAmount and amount_topay <= maxLimitAmount %}
+
+
+
+		<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
+		<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
+		<p>
+		{% assign days = 2 | times: 86400 %} 
+		{% assign expire_date = created_at | date: "%s" | plus: days | date: "%s" %}
+		<a href='https://gateway.ifthenpay.com/?token=[GATEWAY_KEY]&accounts=COFIDIS|[COFIDIS_KEY]&id={{order_number}}&amount={{amount_topay | money_without_currency}}&lang=PT&uid={{id}}&ts={{expire_date}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Concluir Pagamento</a>
+		</p>
+
+	{% else %}	
+		<p style='color: red; line-height: 150%; font-size: 16px; margin: 0;'>Lamentamos mas o montante da encomenda não permite o pagamento a prestações.<br>Para concluir o pagamento por favor entre em contato connosco.</p><br><br>
+	{% endif %}
+	</div>
+{% endif %}
+<!-- ##### end COFIDIS email config ##### -->	
 						
 					</td>
 					</tr>
