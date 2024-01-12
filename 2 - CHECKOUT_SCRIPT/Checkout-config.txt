@@ -7,7 +7,7 @@
 	{% assign paymentMethod = '' %}
 	{% for transaction in transactions %}
 		{% assign gateway = transaction.gateway | upcase %}
-			{% if gateway contains "MB WAY" or gateway contains "MULTIBANCO" or gateway contains "PAYSHOP" or gateway contains "CARTÃO DE CRÉDITO"%}
+			{% if gateway contains "MB WAY" or gateway contains "MULTIBANCO" or gateway contains "PAYSHOP" or gateway contains "CARTÃO DE CRÉDITO" or gateway contains "COFIDIS" %}
 					{% assign paymentMethod = gateway %}
 					{% assign titleGateway = transaction.gateway %}
 					{% assign paymentAmount  = transaction.amount  %} 
@@ -79,6 +79,35 @@
 	</script>
 	{% endif %}
 	<!-- ##### End Config CCARD ##### -->
+
+<!-- ##### Config COFIDIS PAY ##### -->
+	{% if paymentMethod contains "COFIDIS" %}
+         {% assign days = 2 | times: 86400 %} 
+         {% assign expire_date = order.created_at | date: "%s" | plus: days | date: "%s" %}
+
+         {% assign minLimitAmount = 6000 %} <!--Indicar limite minimo, com 2 casas decimais, sem separador decimal (exemplo 60 euros = 6000 ) -->
+         {% assign maxLimitAmount = 100000 %} <!--Indicar limite maximo com 2 casas decimais, sem separador decimal (exemplo 1000 euros = 100000 ) -->			
+
+		{% if paymentAmount >= minLimitAmount and paymentAmount <= maxLimitAmount%}
+			<script type="text/javascript" src="https://gateway.ifthenpay.com/plugins/shopify/js/ifthenpayShopify.js"></script>
+			<script>
+				let gatewayKey="[GATEWAY_KEY]";
+				let cofidisAccount="COFIDIS|[COFIDIS_KEY]";
+				let parameters = "token="+ gatewayKey + "&accounts="+ cofidisAccount +"&id={{order_number}}&amount={{paymentAmount | money_without_currency}}&uid={{order_id}}&cms=SHOPIFY&ts={{expire_date}}";
+				Shopify.Checkout.OrderStatus.addContentBox('<h2>{{titleGateway}}</h2>',
+				'<p>Para concluir a sua compra clique no botão "Cofidis Pay".</p>'+
+				'<br><p>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>'+'<a href="#" id="openGateway" onclick="OpenShopifyGateway(\''+parameters+'\')"><img style="width: auto;height: 40px;" src="https://gateway.ifthenpay.com/templates/gateway/v.2/assets/images/cofidispay_logo.svg"/></a>');
+			</script>
+		{% else %}
+			<script>
+				Shopify.Checkout.OrderStatus.addContentBox('<h2>{{titleGateway}}</h2>',
+				'<p style="color:red;">Lamentamos mas o montante da encomenda não permite o pagamento a prestações.'+
+				'<br>Para concluir o pagamento por favor entre em contato connosco.</p>');
+			</script>
+		{% endif %}
+
+	{% endif %}
+	<!-- ##### End Config COFIDIS ##### -->
 	
 
 	<!-- ##### End Config IFTHENPAY ##### -->
