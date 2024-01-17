@@ -120,7 +120,7 @@
 		/* ### SHOW REFRESH BUTTON ##### */
 		var parameters  = window.location.href + "?details";
 		Shopify.Checkout.OrderStatus.addContentBox('<h2>Informação importante</h2>',
-				'<p>Caso não tenha sido apresentada a opção de pagamento, selecionada na página anterior, clique por favor no botão "Atualizar Página".</p>'+
+				'<p>Caso não tenha sido apresentada a opção de pagamento, selecionada na página anterior, por favor clique no botão "Atualizar Página".</p>'+
 				'<br>'+'<button type="button" id="refreshShopifyDetails" class="btn" onclick="RefreshShopifyPage(\''+parameters+'\')">Atualizar Página</button>');
 
 		window.onload = function() {
