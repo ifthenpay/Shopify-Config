@@ -42,13 +42,18 @@
 										{% assign amount_topay = transaction.amount  %} 
 									{% endif %}
 								{% endfor %}
+								{% assign days = 2 | times: 86400 %} 
+								{% assign expire_date = created_at | date: "%s" | plus: days | date: "%s" %}
+								
 								<div>
 								<h3>Pagamento da Encomenda</h3>
 								<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso não tenha recebido a notificação no seu telemóvel ou não tenha efetuado o pagamento da sua encomenda, clique no botão "Pagar por MB WAY".<br><br></p>
 								<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
 								<p>
 								<center>
-								<a href='https://gateway.ifthenpay.com/plugins/shopify/mbway.php?mbwaykey=[MBWAY_KEY]&telemovel={{shipping_address.phone}}&email={{order.email}}&order_id={{order_number}}&order_total={{amount_topay | money_without_currency}}&id={{id}}&shop_url={{shop.url}}&shop_name={{shop.name}}&shop_logo={{shop.email_logo_url}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Pagar por MB WAY</a>
+								
+								
+								<a href='https://gateway.ifthenpay.com/plugins/shopify/mbway.php?mbwaykey=[MBWAY_KEY]&telemovel={{shipping_address.phone}}&email={{order.email}}&order_id={{order_number}}&order_total={{amount_topay | money_without_currency}}&id={{id}}&shop_url={{shop.url}}&shop_name={{shop.name}}&shop_logo={{shop.email_logo_url}}&ts={{expire_date}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Pagar por MB WAY</a>
 								</center>
 								</p>
 								</div>
@@ -89,13 +94,15 @@
 									{% assign amount_topay = transaction.amount  %} 
 								{% endif %}
 							{% endfor %}
+							{% assign days = 2 | times: 86400 %}
+							{% assign expire_date = created_at | date: "%s" | plus: days | date: "%s" %}
 							<div>
 							<h3>Pagamento da Encomenda</h3>
 							<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
 							<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
 							<p>
 							<center>
-								<a href='https://gateway.ifthenpay.com/?token=[GATEWAY_KEY]&id={{order_number}}&amount={{amount_topay | money_without_currency}}&lang=PT&uid={{id}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Concluir Pagamento</a>
+								<a href='https://gateway.ifthenpay.com/?token=[GATEWAY_KEY]&id={{order_number}}&amount={{amount_topay | money_without_currency}}&lang=PT&uid={{id}}&ts={{expire_date}}' style='background-color:{{shop.email_accent_color}}; border-radius:4px; display:inline-block; cursor:pointer;color:#ffffff; padding:20px 25px; text-decoration:none; margin-bottom:20px'>Concluir Pagamento</a>
 							</center>
 							</p>
 							</div>
@@ -120,9 +127,7 @@
 
 	{% if amount_topay >= minLimitAmount and amount_topay <= maxLimitAmount %}
 
-
-
-		<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
+<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Caso ainda não tenha concluído o pagamento da sua encomenda clique no botão "Concluir Pagamento"</p><br>
 		<p style='color: #777; line-height: 150%; font-size: 16px; margin: 0;'>Será redirecionado para a gateway de pagamentos da ifthenpay para concluir o pagamento de forma fácil e segura.</p><br>
 		<p>
 		{% assign days = 2 | times: 86400 %} 
